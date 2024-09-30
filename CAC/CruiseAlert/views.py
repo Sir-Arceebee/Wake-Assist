@@ -8,14 +8,28 @@ from .utils import detect_sleep_from_frame
 
 
 # Create your views here.
-def home(request):
-    return HttpResponse("hello world!")
+
+def home_page(request):
+    return render(request, "Home.html")
 
 def myprofile(request):
     return HttpResponse("This is my pfp")
 
+
+
+
+
+
+
+
+
+
+
+
+
 def detection_page(request):
-    return render(request, 'detection_page.html')  # Ensure this path is correct
+    return render(request, 'detection_page.html')
+
 
 @csrf_exempt
 def detection(request):
