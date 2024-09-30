@@ -66,10 +66,37 @@
                 return response.json();
             })
             .then(data => {
-                statusText.textContent = `Status: ${data.status}`;
+                // Update the status text with drowsiness alert and eye aspect ratio
+                statusText.textContent = `Status: ${data.status}, EAR: ${data.ear.toFixed(2)}`;
+
+                // Draw eyes on the canvas if data is available
+                drawEyesOnCanvas(data.left_eye, data.right_eye);
             })
             .catch(err => console.error('Error: ', err));
         }
+
+    function drawEyesOnCanvas(leftEye, rightEye) {
+        const context = canvas.getContext('2d');
+        context.clearRect(0, 0, canvas.width, canvas.height); // Clear previous drawings
+
+        if (leftEye && leftEye.length > 0) {
+            context.beginPath();
+            context.moveTo(leftEye[0][0], leftEye[0][1]);
+            leftEye.forEach(point => context.lineTo(point[0], point[1]));
+            context.closePath();
+            context.strokeStyle = 'green'; // Color for left eye
+            context.stroke();
+        }
+
+        if (rightEye && rightEye.length > 0) {
+            context.beginPath();
+            context.moveTo(rightEye[0][0], rightEye[0][1]);
+            rightEye.forEach(point => context.lineTo(point[0], point[1]));
+            context.closePath();
+            context.strokeStyle = 'red'; // Color for right eye
+            context.stroke();
+        }
+    }
 
         startButton.addEventListener('click', () => {
             startCamera();

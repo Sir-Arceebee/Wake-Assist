@@ -22,6 +22,9 @@ def calculate_eye_aspect_ratio(eye):
     ear = (A + B) / (2.0 * C)
     return ear
 
+left_eye = None
+right_eye = None
+ear = 0
 
 def detect_sleep_from_frame(image_data):
     global counter
@@ -32,6 +35,18 @@ def detect_sleep_from_frame(image_data):
 
     faces = detector(gray)
     status = "Awake"
+    left_eye_coords = []
+    right_eye_coords = []
+    ear = 0
+
+    if len(faces) == 0:
+        print("No faces detected.")
+        return {
+            "status": status,
+            "ear": ear,
+            "left_eye": left_eye_coords,
+            "right_eye": right_eye_coords,
+        }
 
     for face in faces:
         landmarks = predictor(gray, face)
@@ -42,6 +57,8 @@ def detect_sleep_from_frame(image_data):
         right_ear = calculate_eye_aspect_ratio(right_eye)
         ear = (left_ear + right_ear) / 2.0
 
+        print(f"Left EAR: {left_ear}, Right EAR: {right_ear}, Combined EAR: {ear}")
+
         if ear < EYE_AR_THRESH:
             counter += 1
             if counter >= EYE_AR_CONSEC_FRAMES:
@@ -49,4 +66,13 @@ def detect_sleep_from_frame(image_data):
         else:
             counter = 0
 
-    return status
+        # Store eye coordinates for the response
+        left_eye_coords = left_eye
+        right_eye_coords = right_eye
+
+    return {
+        "status": status,
+        "ear": ear,  # Eye Aspect Ratio
+        "left_eye": left_eye_coords.tolist(),  # Convert to list for JSON
+        "right_eye": right_eye_coords.tolist(),  # Convert to list for JSON
+    }
