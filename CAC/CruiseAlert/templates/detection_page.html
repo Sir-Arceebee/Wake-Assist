@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Sleep Detection</title>
+    {% load static %}
+</head>
+<body>
+    <h1>Sleep Detection</h1>
+
+    <video id="video" width="640" height="480" autoplay></video>
+    <canvas id="canvas" width="640" height="480" style="display: none;"></canvas>
+    <p id="status">Status: Awake</p>
+
+    <button id="start">Start Detection</button>
+    <button id="stop">Stop Detection</button>
+
+    <!-- CSRF token hidden input -->
+    <input type="hidden" id="csrf-token" value="{{ csrf_token }}">
+
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const startButton = document.getElementById('start');
+        const stopButton = document.getElementById('stop');
+        const statusText = document.getElementById('status');
+        const csrfToken = document.getElementById('csrf-token').value; // Get CSRF token value
+
+        let stream;
+        let interval;
+
+        async function startCamera() {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = stream;
+            } catch (err) {
+                console.error('Error accessing the camera: ', err);
+            }
+        }
+
+        function stopCamera() {
+            if (stream) {
+                const tracks = stream.getTracks();
+                tracks.forEach(track => track.stop());
+            }
+        }
+
+        function sendFrameToServer() {
+            console.log("Attempting to send frame to server...");
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const dataUrl = canvas.toDataURL('image/jpeg');
+
+            fetch('/detection/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken // Use the CSRF token from the hidden input
+                },
+                body: JSON.stringify({ image: dataUrl })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                statusText.textContent = `Status: ${data.status}`;
+            })
+            .catch(err => console.error('Error: ', err));
+        }
+
+        startButton.addEventListener('click', () => {
+            startCamera();
+            interval = setInterval(sendFrameToServer, 1000);  // Send frame every second
+        });
+
+        stopButton.addEventListener('click', () => {
+            clearInterval(interval);
+            stopCamera();
+        });
+    </script>
+</body>
+</html>
