@@ -1,6 +1,9 @@
 from django.shortcuts import render, HttpResponse, redirect
 import base64
 import re
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
 from .utils import detect_sleep_from_frame
@@ -16,14 +19,33 @@ def home_page(request):
 def myprofile(request):
     return HttpResponse("This is my pfp")
 
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('home')  # Redirect to home page after successful login
+        else:
+            return render(request, 'login.html', {'error': 'Invalid credentials'})
+    return render(request, 'login.html')
 
+def guest_login(request):
+    # Maybe implement any guest-specific logic
+    # For now, we'll just redirect to the home page
+    return redirect('home')
 
-
-
-
-
-
-
+def signup_view(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('home')
+    else:
+        form = UserCreationForm()
+    return render(request, 'signup.html', {'form': form})
 
 def detection_page(request):
     return render(request, 'detection_page.html')
