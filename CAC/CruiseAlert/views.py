@@ -47,8 +47,6 @@ def signup_view(request):
         form = UserCreationForm()
     return render(request, 'signup.html', {'form': form})
 
-def detection_page(request):
-    return render(request, 'detection_page.html')
 
 @csrf_exempt
 def detection(request):
@@ -73,4 +71,4 @@ def detection(request):
 
     else:
         # Handle GET request - redirect to the detection page or show a friendly message
-        return redirect('detection_page')  # Redirect to the detection page
+        return render(request, 'detection_page.html')  # Redirect to the detection page
