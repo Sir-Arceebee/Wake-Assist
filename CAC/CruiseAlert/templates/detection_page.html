@@ -1,112 +1,118 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Sleep Detection</title>
     {% load static %}
-</head>
-<body>
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js"></script>
+  </head>
+  <body>
     <h1>Sleep Detection</h1>
 
-    <video id="video" width="640" height="480" autoplay></video>
-    <canvas id="canvas" width="640" height="480" style="display: none;"></canvas>
+    <canvas id="canvas" width="640" height="480"></canvas>
     <p id="status">Status: Awake</p>
 
     <button id="start">Start Detection</button>
     <button id="stop">Stop Detection</button>
 
     <!-- CSRF token hidden input -->
-    <input type="hidden" id="csrf-token" value="{{ csrf_token }}">
+    <input type="hidden" id="csrf-token" value="{{ csrf_token }}" />
 
     <script>
-        const video = document.getElementById('video');
-        const canvas = document.getElementById('canvas');
-        const startButton = document.getElementById('start');
-        const stopButton = document.getElementById('stop');
-        const statusText = document.getElementById('status');
-        const csrfToken = document.getElementById('csrf-token').value; // Get CSRF token value
+      const canvas = document.getElementById("canvas");
+      const startButton = document.getElementById("start");
+      const stopButton = document.getElementById("stop");
+      const statusText = document.getElementById("status");
+      const csrfToken = document.getElementById("csrf-token").value; // Get CSRF token value
 
-        let stream;
-        let interval;
+      let stream;
+      let animationFrameId;
+      const video = document.createElement("video");
 
-        async function startCamera() {
-            try {
-                stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                video.srcObject = stream;
-            } catch (err) {
-                console.error('Error accessing the camera: ', err);
-            }
+      async function startCamera() {
+        try {
+          stream = await navigator.mediaDevices.getUserMedia({ video: true });
+          video.srcObject = stream;
+          await video.play();
+
+          await faceapi.nets.tinyFaceDetector.loadFromUri("/models");
+          await faceapi.nets.faceLandmark68Net.loadFromUri("/models");
+
+          detectFaces();
+        } catch (err) {
+          console.error("Error accessing the camera: ", err);
         }
+      }
 
-        function stopCamera() {
-            if (stream) {
-                const tracks = stream.getTracks();
-                tracks.forEach(track => track.stop());
-            }
+      function stopCamera() {
+        if (stream) {
+          const tracks = stream.getTracks();
+          tracks.forEach((track) => track.stop());
         }
+        cancelAnimationFrame(animationFrameId);
+      }
 
-        function sendFrameToServer() {
-            console.log("Attempting to send frame to server...");
-            const context = canvas.getContext('2d');
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
-            const dataUrl = canvas.toDataURL('image/jpeg');
-
-            fetch('/detection/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken // Use the CSRF token from the hidden input
-                },
-                body: JSON.stringify({ image: dataUrl })
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok ' + response.statusText);
-                }
-                return response.json();
-            })
-            .then(data => {
-                // Update the status text with drowsiness alert and eye aspect ratio
-                statusText.textContent = `Status: ${data.status}, EAR: ${data.ear.toFixed(2)}`;
-
-                // Draw eyes on the canvas if data is available
-                drawEyesOnCanvas(data.left_eye, data.right_eye);
-            })
-            .catch(err => console.error('Error: ', err));
-        }
-
-    function drawEyesOnCanvas(leftEye, rightEye) {
-        const context = canvas.getContext('2d');
+      async function detectFaces() {
+        const context = canvas.getContext("2d");
         context.clearRect(0, 0, canvas.width, canvas.height); // Clear previous drawings
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
+        const detections = await faceapi
+          .detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
+          .withFaceLandmarks();
+        detections.forEach((detection) => {
+          const landmarks = detection.landmarks;
+          const leftEye = landmarks.getLeftEye();
+          const rightEye = landmarks.getRightEye();
+          drawEyesOnCanvas(leftEye, rightEye);
+        });
+
+        animationFrameId = requestAnimationFrame(detectFaces);
+      }
+
+      function drawEyesOnCanvas(leftEye, rightEye) {
+        const context = canvas.getContext("2d");
+
+        // Draw left eye box
         if (leftEye && leftEye.length > 0) {
-            context.beginPath();
-            context.moveTo(leftEye[0][0], leftEye[0][1]);
-            leftEye.forEach(point => context.lineTo(point[0], point[1]));
-            context.closePath();
-            context.strokeStyle = 'green'; // Color for left eye
-            context.stroke();
+          context.beginPath();
+          leftEye.forEach((point, index) => {
+            if (index === 0) {
+              context.moveTo(point.x, point.y);
+            } else {
+              context.lineTo(point.x, point.y);
+            }
+          });
+          context.closePath();
+          context.strokeStyle = "green";
+          context.lineWidth = 2;
+          context.stroke();
         }
 
+        // Draw right eye box
         if (rightEye && rightEye.length > 0) {
-            context.beginPath();
-            context.moveTo(rightEye[0][0], rightEye[0][1]);
-            rightEye.forEach(point => context.lineTo(point[0], point[1]));
-            context.closePath();
-            context.strokeStyle = 'red'; // Color for right eye
-            context.stroke();
+          context.beginPath();
+          rightEye.forEach((point, index) => {
+            if (index === 0) {
+              context.moveTo(point.x, point.y);
+            } else {
+              context.lineTo(point.x, point.y);
+            }
+          });
+          context.closePath();
+          context.strokeStyle = "green";
+          context.lineWidth = 2;
+          context.stroke();
         }
-    }
+      }
 
-        startButton.addEventListener('click', () => {
-            startCamera();
-            interval = setInterval(sendFrameToServer, 1000);  // Send frame every second
-        });
+      startButton.addEventListener("click", () => {
+        startCamera();
+      });
 
-        stopButton.addEventListener('click', () => {
-            clearInterval(interval);
-            stopCamera();
-        });
+      stopButton.addEventListener("click", () => {
+        stopCamera();
+      });
     </script>
-</body>
+  </body>
 </html>

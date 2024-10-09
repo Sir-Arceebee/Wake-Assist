@@ -1,11 +1,13 @@
 from django.shortcuts import render, HttpResponse, redirect
 import base64
 import re
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django.http import JsonResponse, HttpResponseBadRequest
+from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
+from .forms import EditProfileForm
 from .utils import detect_sleep_from_frame
 import logging
 
@@ -49,6 +51,59 @@ def signup_view(request):
 
 def detection_page(request):
     return render(request, 'detection_page.html')
+
+def features(request):
+    return render(request, 'features.html')
+
+def contact(request):
+    return render(request, 'contact.html')
+
+def dashboard_view(request):
+    context = {
+        'user': request.user,
+        'drowsiness_chart': None,  # Replace with chart URL or None if no data
+        'sleep_chart': None,  # Replace with chart URL or None if no data
+        'recent_sessions': [
+            {'date': 'April 10', 'level': 'High'},
+            {'date': 'April 08', 'level': 'Medium'},
+        ],  # Pass empty list if no sessions
+        'notifications': [],
+        'activity_log': [],
+        'todo_list': ['Complete Sleep Survey', 'Update Profile Information'],
+    }
+    return render(request, 'dashboard.html', context)
+
+# Profile view
+@login_required
+def profile(request):
+    return render(request, 'profile.html')  # Renders the profile page template
+
+# Edit Profile view
+@login_required
+def edit_profile(request):
+    if request.method == 'POST':
+        form = EditProfileForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+    else:
+        form = EditProfileForm(instance=request.user)
+
+    return render(request, 'edit_profile.html', {'form': form})
+
+# Change Password view
+@login_required
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Keep the user logged in after password change
+            return redirect('profile')
+    else:
+        form = PasswordChangeForm(request.user)
+
+    return render(request, 'change_password.html', {'form': form})
 
 @csrf_exempt
 def detection(request):

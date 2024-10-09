@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Profile - WakeAssist</title>
+    {% load static %}
+    <!-- Google Font: Poppins -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+    />
+    <!-- FontAwesome for Icons -->
+    <script
+      src="https://kit.fontawesome.com/a076d05399.js"
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      body,
+      html {
+        height: 100%;
+        margin: 0;
+        font-family: "Poppins", sans-serif;
+        background-color: #000000; /* Black background */
+        color: #ffffff; /* White text */
+      }
+      .navbar {
+        background-color: transparent;
+        padding-top: 20px;
+        padding-bottom: 20px;
+      }
+      .navbar-brand {
+        color: #4c4ef9 !important; /* Blue */
+        font-weight: 800;
+        font-size: 1.5rem;
+      }
+      .nav-link {
+        color: #ffffff !important; /* White */
+        font-weight: 500;
+        margin-left: 15px;
+      }
+      .nav-link:hover {
+        color: #4c4ef9 !important; /* Blue on hover */
+      }
+      .profile-header {
+        background-color: #1a1a1a; /* Dark grey background */
+        padding: 50px 0;
+        text-align: center;
+        border-bottom: 2px solid #4c4ef9;
+      }
+      .profile-header h1 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: #ffffff;
+      }
+      .profile-header p {
+        font-size: 1.2rem;
+        color: #cccccc;
+        margin-top: 10px;
+      }
+      .profile-card {
+        background-color: #1a1a1a; /* Dark grey background */
+        border: none;
+        border-radius: 12px;
+        padding: 40px 30px;
+        margin-top: 30px; /* Adjust this value to move the card down */
+        text-align: center;
+        box-shadow: 0 15px 30px rgba(76, 78, 249, 0.3);
+      }
+      .profile-card h2 {
+        font-size: 1.8rem;
+        color: #ffffff;
+        font-weight: 600;
+      }
+      .profile-card .profile-info {
+        color: #cccccc;
+        margin: 20px 0;
+        font-size: 1.1rem;
+      }
+      .profile-card .profile-info i {
+        color: #4c4ef9;
+        margin-right: 10px;
+      }
+      .btn-primary {
+        background-color: #4c4ef9;
+        border: none;
+        border-radius: 12px;
+        padding: 12px 30px;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #ffffff;
+      }
+      .btn-primary:hover {
+        background-color: #3a3ce0;
+      }
+      .profile-container {
+        margin-top: 50px; /* Increased top margin to move the profile card further down */
+      }
+      footer {
+        background-color: #000000;
+        padding: 20px 0;
+        text-align: center;
+        color: #777777;
+        font-size: 0.9rem;
+        margin-top: 50px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="{% url 'home' %}#">WakeAssist</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"><!-- Icon --></span>
+        </button>
+        <div
+          class="collapse navbar-collapse justify-content-end"
+          id="navbarNav"
+        >
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'home' %}">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'contact' %}">Contact</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Profile Header -->
+    <div class="profile-header">
+      <div class="container">
+        <h1>Welcome, {{ user.username }}</h1>
+        <p>Manage your account and settings below</p>
+      </div>
+    </div>
+
+    <!-- Profile Card Container -->
+    <div class="container profile-container">
+      <div class="profile-card">
+        <h2>Profile Information</h2>
+        <div class="profile-info">
+          <p><i class="fas fa-user"></i> Username: {{ user.username }}</p>
+          <p><i class="fas fa-envelope"></i> Email: {{ user.email }}</p>
+          <p><i class="fas fa-calendar"></i> Joined: {{ user.date_joined }}</p>
+        </div>
+        <a href="{% url 'edit_profile' %}" class="btn btn-primary"
+          >Edit Profile</a
+        >
+        <a href="{% url 'change_password' %}" class="btn btn-primary"
+          >Change Password</a
+        >
+      </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

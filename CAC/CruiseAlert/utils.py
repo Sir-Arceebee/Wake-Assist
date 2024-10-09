@@ -7,7 +7,7 @@ import io
 from PIL import Image
 
 detector = dlib.get_frontal_face_detector()
-predictor = dlib.shape_predictor('CruiseAlert/models/shape_predictor_68_face_landmarks.dat')
+predictor = dlib.shape_predictor('/Users/derek/Cruise-Alert/models/shape_predictor_68_face_landmarks.dat') #change path
 
 LEFT_EYE = list(range(36, 42))
 RIGHT_EYE = list(range(42, 48))

@@ -160,6 +160,24 @@
       .features .card {
         flex: 1;
       }
+      .get-started-btn {
+        position: relative;
+        z-index: 1;
+        background-color: #4c4ef9;
+        border: none;
+        border-radius: 12px; /* Rounded edges */
+        padding: 12px 30px;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #ffffff;
+        text-decoration: none; /* Ensure it's styled like a button */
+        display: inline-block; /* Aligns properly */
+      }
+
+      .get-started-btn:hover {
+        background-color: #3a3ce0;
+      }
+
       #particles-js {
         position: fixed;
         width: 100%;
@@ -193,10 +211,10 @@
         >
           <ul class="navbar-nav align-items-center">
             <li class="nav-item">
-              <a class="nav-link" href="#">Home</a>
+              <a class="nav-link" href="{% url 'home' %}">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Features</a>
+              <a class="nav-link" href="{% url 'features' %}">Features</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#">Contact</a>
@@ -226,7 +244,11 @@
       <div class="container">
         <h1>Stay Alert, Stay Focused</h1>
         <p>Enhance your productivity with real-time alertness tracking.</p>
-        <a href="detection_page.html" class="btn btn-primary">Get Started</a>
+        <a
+          href="{% url 'detection_page' %}"
+          class="btn btn-primary get-started-btn"
+          >Get Started</a
+        >
       </div>
     </div>
 
