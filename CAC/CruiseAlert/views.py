@@ -74,8 +74,6 @@ def signup_view(request):
         form = UserCreationForm()
     return render(request, 'signup.html', {'form': form})
 
-def detection_page(request):
-    return render(request, 'detection_page.html')
 
 def features(request):
     return render(request, 'features.html')
@@ -207,5 +205,4 @@ def detection(request):
             return HttpResponseBadRequest("Invalid image data")
 
     else:
-        # Handle GET request - redirect to the detection page or show a friendly message
-        return redirect('detection_page')  # Redirect to the detection page
+        return render(request, 'detection_page.html')
