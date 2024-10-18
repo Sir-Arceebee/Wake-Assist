@@ -201,8 +201,6 @@ def detection(request):
                 "right_eye": detection_result["right_eye"],  # Return right eye coordinates
             })
         except Exception as e:
-            # Handle exceptions (e.g., if image_data is not found)
             return HttpResponseBadRequest("Invalid image data")
-
     else:
         return render(request, 'detection_page.html')
