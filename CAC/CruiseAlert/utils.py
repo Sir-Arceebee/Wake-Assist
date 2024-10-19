@@ -5,9 +5,16 @@ import numpy as np
 import base64
 import io
 from PIL import Image
+import os
+
+# Get the base directory of the project
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# Define the path to the shape predictor relative to BASE_DIR
+model_path = os.path.join(BASE_DIR, 'CruiseAlert', 'models', 'shape_predictor_68_face_landmarks.dat')
+
 
 detector = dlib.get_frontal_face_detector()
-predictor = dlib.shape_predictor('CruiseAlert/models/shape_predictor_68_face_landmarks.dat')
+predictor = dlib.shape_predictor(model_path)
 
 LEFT_EYE = list(range(36, 42))
 RIGHT_EYE = list(range(42, 48))

@@ -1,209 +1,438 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<title>WakeAssist</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<style>
-body {font-family: "Lato", sans-serif}
-.mySlides {display: none}
-</style>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WakeAssist</title>
+    <!-- Google Font: Poppins -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+    />
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: #000000; /* Black background */
+        color: #ffffff; /* White text */
+        position: relative;
+      }
+      .navbar {
+        background-color: transparent;
+        padding-top: 20px;
+        padding-bottom: 20px;
+      }
+      .navbar-brand {
+        color: #4c4ef9 !important; /* Blue */
+        font-weight: 800;
+        font-size: 1.5rem;
+      }
+      .nav-link {
+        color: #ffffff !important; /* White */
+        font-weight: 500;
+        margin-left: 15px;
+      }
+      .nav-link:hover {
+        color: #4c4ef9 !important; /* Blue on hover */
+      }
+      .hero {
+        background-color: #000000; /* Black background */
+        padding: 100px 0;
+        text-align: center;
+      }
+      .hero h1 {
+        font-size: 3rem;
+        font-weight: 800;
+        color: #ffffff;
+        margin-bottom: 20px;
+      }
+      .hero p {
+        font-size: 1.25rem;
+        color: #cccccc; /* Light grey */
+        margin-bottom: 40px;
+      }
+      .btn-primary {
+        background-color: #4c4ef9;
+        border: none;
+        border-radius: 12px; /* Rounded edges */
+        padding: 12px 30px;
+        font-size: 1rem;
+        font-weight: 600;
+      }
+      .btn-primary:hover {
+        background-color: #3a3ce0;
+      }
+      .features {
+        padding: 80px 0;
+        background-color: #000000; /* Black background */
+      }
+      .feature-icon {
+        font-size: 3rem;
+        color: #4c4ef9;
+        margin-bottom: 20px;
+      }
+      .feature-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: #ffffff;
+      }
+      .feature-description {
+        color: #cccccc;
+        font-size: 1rem;
+        padding: 0 20px;
+      }
+      /* Card styles with hover effect */
+      .card {
+        background-color: #1a1a1a; /* Dark grey background */
+        border-radius: 12px;
+        padding: 30px 20px;
+        margin: 20px 0;
+        transition: transform 0.3s, box-shadow 0.3s;
+      }
+      .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 25px rgba(76, 78, 249, 0.3);
+      }
+      .contact {
+        background-color: #000000; /* Black background */
+        padding: 80px 0;
+        text-align: center;
+      }
+      .contact h2 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: #ffffff;
+        margin-bottom: 30px;
+      }
+      .contact p {
+        font-size: 1.1rem;
+        color: #cccccc;
+        margin-bottom: 40px;
+      }
+      .contact-form .form-control {
+        background-color: #1a1a1a; /* Dark grey background */
+        border: none;
+        border-radius: 12px; /* Rounded edges */
+        padding: 12px;
+        margin-bottom: 20px;
+        color: #ffffff;
+      }
+      .contact-form .form-control::placeholder {
+        color: #777777;
+      }
+      .contact-form .btn {
+        background-color: #4c4ef9;
+        border: none;
+        border-radius: 12px; /* Rounded edges */
+        padding: 12px 30px;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #ffffff;
+      }
+      .contact-form .btn:hover {
+        background-color: #3a3ce0;
+      }
+      footer {
+        background-color: #000000;
+        padding: 20px 0;
+        text-align: center;
+        color: #777777;
+        font-size: 0.9rem;
+      }
+      .features .row {
+        display: flex;
+        flex-wrap: wrap;
+      }
+      .features .col-md-4 {
+        display: flex;
+      }
+      .features .card {
+        flex: 1;
+      }
+      .get-started-btn {
+        position: relative;
+        z-index: 1;
+        background-color: #4c4ef9;
+        border: none;
+        border-radius: 12px; /* Rounded edges */
+        padding: 12px 30px;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #ffffff;
+        text-decoration: none; /* Ensure it's styled like a button */
+        display: inline-block; /* Aligns properly */
+      }
 
-<!-- Navbar -->
-<div class="w3-top">
-  <div class="w3-bar w3-light-blue w3-card">
-    <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
-    <a href="#" class="w3-bar-item w3-button w3-padding-large">HOME</a>
-    <a href="#ABOUT US" class="w3-bar-item w3-button w3-padding-large w3-hide-small">ABOUT US</a>
-    <a href="#SETTINGS" class="w3-bar-item w3-button w3-padding-large w3-hide-small">SETTINGS</a>
-    <a href="#CONTACT" class="w3-bar-item w3-button w3-padding-large w3-hide-small">CONTACT</a>
-    <div class="w3-dropdown-hover w3-hide-small">
-      <button class="w3-padding-large w3-button" title="More">MORE <i class="fa fa-caret-down"></i></button>
-      <div class="w3-dropdown-content w3-bar-block w3-card-4">
-        <a href="#" class="w3-bar-item w3-button">Merchandise</a>
-        <a href="#" class="w3-bar-item w3-button">Extras</a>
-        <a href="#" class="w3-bar-item w3-button">Media</a>
+      .get-started-btn:hover {
+        background-color: #3a3ce0;
+      }
+
+      #particles-js {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 0; /* Ensure particles are behind all content */
+      }
+    </style>
+  </head>
+  <body>
+    <div id="particles-js"></div>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="#">WakeAssist</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"><!-- Icon --></span>
+        </button>
+        <div
+          class="collapse navbar-collapse justify-content-end"
+          id="navbarNav"
+        >
+          <ul class="navbar-nav align-items-center">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'home' %}">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'features' %}">Features</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'contact' %}">Contact</a>
+            </li>
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'profile' %}">Profile</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'login' %}">Login</a>
+            </li>
+            <li class="nav-item">
+              <a class="btn btn-primary" href="{% url 'signup' %}">Sign Up</a>
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero">
+      <div class="container">
+        <h1>Stay Alert, Stay Focused</h1>
+        <p>Enhance your productivity with real-time alertness tracking.</p>
+        <a
+          href="{% url 'detection_page' %}"
+          class="btn btn-primary get-started-btn"
+          >Get Started</a
+        >
       </div>
     </div>
-    <a href="javascript:void(0)" class="w3-padding-large w3-hover-red w3-hide-small w3-right"><i class="fa fa-search"></i></a>
-    
-    <!-- New buttons for login, signout, and profile -->
-    {% if user.is_authenticated %}
-      <a href="{% url 'profile' %}" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-right">PROFILE</a>
-      <a href="{% url 'logout' %}" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-right">SIGN OUT</a>
-    {% else %}
-      <a href="{% url 'login' %}" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-right">LOGIN</a>
-      <a href="{% url 'signup' %}" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-right">SIGN UP</a>
-    {% endif %}
-  </div>
-</div>
 
-<!-- Navbar on small screens (remove the onclick attribute if you want the navbar to always show on top of the content when clicking on the links) -->
-<div id="navDemo" class="w3-bar-block w3-black w3-hide w3-hide-large w3-hide-medium w3-top" style="margin-top:46px">
-  <a href="#ABOUTUS" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">ABOUT US</a>
-  <a href="#SETTINGS" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">SETTINGS</a>
-  <a href="#contact" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">CONTACT</a>
-  <a href="#" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">MERCH</a>
-  {% if user.is_authenticated %}
-    <a href="{% url 'profile' %}" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">PROFILE</a>
-    <a href="{% url 'logout' %}" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">SIGN OUT</a>
-  {% else %}
-    <a href="{% url 'login' %}" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">LOGIN</a>
-    <a href="{% url 'signup' %}" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">SIGN UP</a>
-  {% endif %}
-</div>
-
-<!-- Page content -->
-<div class="w3-content" style="max-width:2000px;margin-top:46px">
-
-  <!-- Automatic Slideshow Images -->
-  <div class="mySlides w3-display-container w3-center">
-    <img src="/w3images/la.jpg" style="width:100%">
-    <div class="w3-display-bottommiddle w3-container w3-text-white w3-padding-32 w3-hide-small">
-      <h3>WakeAssist</h3>
-      <p><b>We had the best time playing at Venice Beach!</b></p>
-    </div>
-  </div>
-  <div class="mySlides w3-display-container w3-center">
-    <img src="/w3images/ny.jpg" style="width:100%">
-    <div class="w3-display-bottommiddle w3-container w3-text-white w3-padding-32 w3-hide-small">
-      <h3>WakeAssist</h3>
-      <p><b>The atmosphere in New York is lorem ipsum.</b></p>
-    </div>
-  </div>
-  <div class="mySlides w3-display-container w3-center">
-    <img src="/w3images/chicago.jpg" style="width:100%">
-    <div class="w3-display-bottommiddle w3-container w3-text-white w3-padding-32 w3-hide-small">
-      <h3>WakeAssist</h3>
-      <p><b>Thank you, Chicago - A night we won't forget.</b></p>
-    </div>
-  </div>
-
-  <!-- The About Us Section -->
-  <div class="w3-container w3-pale-yellow">
-  <div class="w3-container w3-content w3-center w3-padding-64" style="max-width:800px" id="ABOUT US">
-    <h2 class="w3-wide">ABOUT US</h2>
-    <p class="w3-opacity"><i>Our engineers</i></p>
-    <p class="w3-justify">INSPIRING PARAGRAPH HERE</p>
-    <div class="w3-row w3-padding-32">
-      <div class="w3-third">
-        <p>Name</p>
-        <img src="/w3images/bandmember.jpg" class="w3-round w3-margin-bottom" alt="Random Name" style="width:60%">
-      </div>
-      <div class="w3-third">
-        <p>Name</p>
-        <img src="/w3images/bandmember.jpg" class="w3-round w3-margin-bottom" alt="Random Name" style="width:60%">
-      </div>
-      <div class="w3-third">
-        <p>Name</p>
-        <img src="/w3images/bandmember.jpg" class="w3-round" alt="Random Name" style="width:60%">
-          <div id="ticketModal" class="w3-modal">
-    <div class="w3-modal-content w3-animate-top w3-card-4">
-      <header class="w3-container w3-teal w3-center w3-padding-32">
-        <span onclick="document.getElementById('ticketModal').style.display='none'"
-       class="w3-button w3-teal w3-xlarge w3-display-topright">×</span>
-        <h2 class="w3-wide"><i class="fa fa-suitcase w3-margin-right"></i>Tickets</h2>
-      </header>
-      <div class="w3-container">
-        <p><label><i class="fa fa-shopping-cart"></i> Tickets, $15 per person</label></p>
-        <input class="w3-input w3-border" type="text" placeholder="How many?">
-        <p><label><i class="fa fa-user"></i> Send To</label></p>
-        <input class="w3-input w3-border" type="text" placeholder="Enter email">
-        <button class="w3-button w3-block w3-teal w3-padding-16 w3-section w3-right">PAY <i class="fa fa-check"></i></button>
-        <button class="w3-button w3-red w3-section" onclick="document.getElementById('ticketModal').style.display='none'">Close <i class="fa fa-remove"></i></button>
-        <p class="w3-right">Need <a href="#" class="w3-text-blue">help?</a></p>
-      </div>
-    </div>
-  </div>
-      </div>
-    </div>
-  </div>
-
-
-  <!-- The Contact Section -->
- <div class="w3-light-blue" id="CONTACT">
-    <div class="w3-container w3-content w3-padding-64" style="max-width:800px">
-      <h2 class="w3-wide w3-center">CONTACT</h2>
-    <div class="w3-row w3-padding-32">
-      <div class="w3-col m6 w3-large w3-margin-bottom">
-        <i class="fa fa-map-marker" style="width:30px"></i> PHOENIX, AZ<br>
-        <i class="fa fa-phone" style="width:30px"></i> Phone: +-------<br>
-        <i class="fa fa-envelope" style="width:30px"> </i> Email: mail@mail.com<br>
-      </div>
-      <div class="w3-col m6">
-        <form action="/action_page.php" target="_blank">
-          <div class="w3-row-padding" style="margin:0 -16px 8px -16px">
-            <div class="w3-half">
-              <input class="w3-input w3-border" type="text" placeholder="Name" required name="Name">
-            </div>
-            <div class="w3-half">
-              <input class="w3-input w3-border" type="text" placeholder="Email" required name="Email">
+    <!-- Features Section -->
+    <div class="features">
+      <div class="container">
+        <div class="row text-center">
+          <div class="col-md-4">
+            <div class="feature card">
+              <i class="fas fa-eye feature-icon"></i>
+              <h3 class="feature-title">Eye Tracking</h3>
+              <p class="feature-description">
+                Monitor your eye movements to detect signs of drowsiness.
+              </p>
             </div>
           </div>
-          <input class="w3-input w3-border" type="text" placeholder="Message" required name="Message">
-          <button class="w3-button w3-black w3-section w3-right" type="submit">SEND</button>
-        </form>
+          <div class="col-md-4">
+            <div class="feature card">
+              <i class="fas fa-bell feature-icon"></i>
+              <h3 class="feature-title">Real-Time Alerts</h3>
+              <p class="feature-description">
+                Receive instant notifications to keep you on track.
+              </p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="feature card">
+              <i class="fas fa-chart-line feature-icon"></i>
+              <h3 class="feature-title">Performance Insights</h3>
+              <p class="feature-description">
+                Analyze your alertness trends and improve over time.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 
-<!-- End Page Content -->
-</div>
+    <!-- Contact Section -->
+    <div class="contact">
+      <div class="container">
+        <h2>Get in Touch</h2>
+        <p>We'd love to hear your feedback and answer any questions.</p>
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <form class="contact-form">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Name"
+                required
+              />
+              <input
+                type="email"
+                class="form-control"
+                placeholder="Email"
+                required
+              />
+              <textarea
+                class="form-control"
+                rows="4"
+                placeholder="Message"
+                required
+              ></textarea>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
 
-<!-- Image of location/map -->
-<img src="/w3images/map.jpg" class="w3-image w3-greyscale-min" style="width:100%">
-
-<!-- Footer -->
-<footer class="w3-container w3-padding-64 w3-center w3-opacity w3-light-grey w3-xlarge">
-  <i class="fa fa-facebook-official w3-hover-opacity"></i>
-  <i class="fa fa-instagram w3-hover-opacity"></i>
-  <i class="fa fa-snapchat w3-hover-opacity"></i>
-  <i class="fa fa-pinterest-p w3-hover-opacity"></i>
-  <i class="fa fa-twitter w3-hover-opacity"></i>
-  <i class="fa fa-linkedin w3-hover-opacity"></i>
-  <p class="w3-medium">Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
-</footer>
-
-<script>
-// Automatic Slideshow - change image every 4 seconds
-var myIndex = 0;
-carousel();
-
-function carousel() {
-  var i;
-  var x = document.getElementsByClassName("mySlides");
-  for (i = 0; i < x.length; i++) {
-    x[i].style.display = "none";
-  }
-  myIndex++;
-  if (myIndex > x.length) {myIndex = 1}
-  x[myIndex-1].style.display = "block";
-  setTimeout(carousel, 4000);
-}
-
-// Used to toggle the menu on small screens when clicking on the menu button
-function myFunction() {
-  var x = document.getElementById("navDemo");
-  if (x.className.indexOf("w3-show") == -1) {
-    x.className += " w3-show";
-  } else {
-    x.className = x.className.replace(" w3-show", "");
-  }
-}
-
-// When the user clicks anywhere outside of the modal, close it
-var modal = document.getElementById('ticketModal');
-window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
-}
-</script>
-
-</body>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Font Awesome -->
+    <script
+      src="https://kit.fontawesome.com/a076d05399.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script>
+      particlesJS("particles-js", {
+        particles: {
+          number: {
+            value: 80,
+            density: {
+              enable: true,
+              value_area: 800,
+            },
+          },
+          color: {
+            value: "#C0C0C0", // Change to silver color
+          },
+          shape: {
+            type: "circle",
+            stroke: {
+              width: 0,
+              color: "#000000",
+            },
+          },
+          opacity: {
+            value: 0.5,
+            random: false,
+            anim: {
+              enable: false,
+              speed: 1,
+              opacity_min: 0.1,
+              sync: false,
+            },
+          },
+          size: {
+            value: 3,
+            random: true,
+            anim: {
+              enable: false,
+              speed: 40,
+              size_min: 0.1,
+              sync: false,
+            },
+          },
+          line_linked: {
+            enable: true,
+            distance: 150,
+            color: "#C0C0C0", // Change line color to silver
+            opacity: 0.4,
+            width: 1,
+          },
+          move: {
+            enable: true,
+            speed: 6,
+            direction: "none",
+            random: false,
+            straight: false,
+            out_mode: "out",
+            attract: {
+              enable: false,
+              rotateX: 600,
+              rotateY: 1200,
+            },
+          },
+        },
+        interactivity: {
+          detect_on: "canvas",
+          events: {
+            onhover: {
+              enable: true,
+              mode: "repulse",
+            },
+            onclick: {
+              enable: true,
+              mode: "push",
+            },
+            resize: true,
+          },
+          modes: {
+            grab: {
+              distance: 400,
+              line_linked: {
+                opacity: 1,
+              },
+            },
+            bubble: {
+              distance: 400,
+              size: 40,
+              duration: 2,
+              opacity: 8,
+              speed: 3,
+            },
+            repulse: {
+              distance: 200,
+              duration: 0.4,
+            },
+            push: {
+              particles_nb: 4,
+            },
+            remove: {
+              particles_nb: 2,
+            },
+          },
+        },
+        retina_detect: true,
+      });
+    </script>
+  </body>
 </html>

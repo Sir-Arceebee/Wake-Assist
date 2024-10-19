@@ -1,0 +1,126 @@
+{% extends 'base.html' %} {% block title %}Dashboard - WakeAssist{% endblock %}
+{% block content %}
+<div class="row">
+  <!-- Drowsiness Activity Card -->
+  <div class="col-md-6">
+    <div class="card">
+      <h3>Drowsiness Activity</h3>
+      <div class="chart">
+        {% if drowsiness_chart %}
+        <img
+          src="{{ drowsiness_chart }}"
+          alt="Drowsiness Chart"
+          class="img-fluid"
+        />
+        {% else %}
+        <div class="alert alert-warning">No data available.</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Sleep Quality Card -->
+  <div class="col-md-6">
+    <div class="card">
+      <h3>Sleep Quality</h3>
+      <div class="chart">
+        {% if sleep_chart %}
+        <img
+          src="{{ sleep_chart }}"
+          alt="Sleep Quality Chart"
+          class="img-fluid"
+        />
+        {% else %}
+        <p>No data available.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Additional Info Cards -->
+<div class="row">
+  <!-- Recent Sessions Card -->
+  <div class="col-md-6">
+    <div class="card">
+      <h3>Recent Sessions</h3>
+      {% if recent_sessions %}
+      <ul>
+        {% for session in recent_sessions %}
+        <li>
+          Session on <strong>{{ session.date }}</strong> - Drowsiness Level: {{
+          session.level }}
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p>No recent sessions available.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Notifications Card -->
+  <div class="col-md-6">
+    <div class="card">
+      <h3>Notifications</h3>
+      {% if notifications %}
+      <ul>
+        {% for notification in notifications %}
+        <li>{{ notification }}</li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p>You have no new notifications.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- Activity Log and To-Do List -->
+<div class="row">
+  <!-- Activity Log Card -->
+  <div class="col-md-6">
+    <div class="card">
+      <h3>Activity Log</h3>
+      {% if activity_log %}
+      <table class="table table-dark table-striped">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Activity</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for log in activity_log %}
+          <tr>
+            <td>{{ log.date }}</td>
+            <td>{{ log.activity }}</td>
+            <td>{{ log.status }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p>No activity logs available.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- To-Do List Card -->
+  <div class="col-md-6">
+    <div class="card">
+      <h3>To-Do List</h3>
+      {% if todo_list %}
+      <ul>
+        {% for item in todo_list %}
+        <li>{{ item }}</li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p>No tasks available.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

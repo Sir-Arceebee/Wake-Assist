@@ -1,112 +1,354 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Sleep Detection</title>
-    {% load static %}
-</head>
-<body>
-    <h1>Sleep Detection</h1>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>WakeAssist - Sleep Detection</title>
+    <!-- Google Font: Poppins -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+    />
+    <!-- Font Awesome -->
+    <script
+      src="https://kit.fontawesome.com/a076d05399.js"
+      crossorigin="anonymous"
+    ></script>
+    <!-- Custom Styles -->
+    <style>
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: #000000; /* Black background */
+        color: #ffffff; /* White text */
+        margin: 0;
+        padding: 0;
+      }
+      .navbar {
+        background-color: transparent;
+        padding-top: 20px;
+        padding-bottom: 20px;
+      }
+      .navbar-brand {
+        color: #4c4ef9 !important; /* Blue */
+        font-weight: 800;
+        font-size: 1.5rem;
+      }
+      .nav-link {
+        color: #ffffff !important; /* White */
+        font-weight: 500;
+        margin-left: 15px;
+      }
+      .nav-link:hover {
+        color: #4c4ef9 !important; /* Blue on hover */
+      }
+      /* Hero Section */
+      .hero {
+        background-color: #000000; /* Black background */
+        padding: 100px 0;
+        text-align: center;
+      }
+      .hero h1 {
+        font-size: 3rem;
+        font-weight: 800;
+        color: #ffffff;
+        margin-bottom: 20px;
+      }
+      .hero p {
+        font-size: 1.25rem;
+        color: #cccccc; /* Light grey */
+        margin-bottom: 40px;
+      }
+      .btn-primary,
+      .btn-secondary {
+        background-color: #4c4ef9;
+        border: none;
+        border-radius: 12px;
+        padding: 12px 30px;
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 10px;
+      }
+      .btn-primary:hover,
+      .btn-secondary:hover {
+        background-color: #3a3ce0;
+      }
+      footer {
+        background-color: #000000;
+        padding: 20px 0;
+        text-align: center;
+        color: #777777;
+        font-size: 0.9rem;
+      }
+      /* Video and Canvas Container */
+      .video-container {
+        position: relative;
+        width: 640px;
+        height: 480px;
+        margin: 0 auto;
+        border-radius: 12px;
+        background-color: #1a1a1a; /* Dark grey background */
+        overflow: hidden;
+      }
+      /* Video Styling */
+      #video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 12px;
+        object-fit: cover;
+        display: none; /* Keep the video element hidden */
+      }
+      /* Canvas Styling */
+      #canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 12px;
+        pointer-events: none; /* Allows clicks to pass through to the video */
+        display: none; /* Initially hidden */
+      }
+      #status {
+        font-size: 1.25rem;
+        text-align: center;
+        margin-top: 20px;
+        color: #cccccc;
+      }
+      /* Button Container */
+      .button-container {
+        text-align: center;
+        margin-top: 30px;
+      }
+      /* Responsive Adjustments */
+      @media (max-width: 700px) {
+        .video-container {
+          width: 100%;
+          height: auto;
+        }
+        #video,
+        #canvas {
+          height: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="{% url 'home' %}">WakeAssist</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"><!-- Icon --></span>
+        </button>
+        <div
+          class="collapse navbar-collapse justify-content-end"
+          id="navbarNav"
+        >
+          <ul class="navbar-nav align-items-center">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'home' %}">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'features' %}">Features</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'contact' %}">Contact</a>
+            </li>
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'profile' %}">Profile</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'login' %}">Login</a>
+            </li>
+            <li class="nav-item">
+              <a class="btn btn-primary" href="{% url 'signup' %}">Sign Up</a>
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
 
-    <video id="video" width="640" height="480" autoplay></video>
-    <canvas id="canvas" width="640" height="480" style="display: none;"></canvas>
-    <p id="status">Status: Awake</p>
+    <!-- Hero Section -->
+    <div class="hero">
+      <div class="container">
+        <h1>Sleep Detection</h1>
+        <p>
+          Monitor your sleep patterns and ensure you're getting quality rest.
+        </p>
+      </div>
+    </div>
 
-    <button id="start">Start Detection</button>
-    <button id="stop">Stop Detection</button>
+    <!-- Main Content -->
+    <div class="container">
+      <div class="video-container">
+        <video id="video" width="640" height="480" autoplay playsinline></video>
+        <canvas id="canvas" width="640" height="480"></canvas>
+      </div>
+      <p id="status">Status: Awake</p>
 
-    <!-- CSRF token hidden input -->
-    <input type="hidden" id="csrf-token" value="{{ csrf_token }}">
+      <div class="button-container">
+        <button id="start" class="btn btn-primary">Start Detection</button>
+        <button id="stop" class="btn btn-secondary">Stop Detection</button>
+      </div>
 
+      <!-- CSRF token hidden input -->
+      <input type="hidden" id="csrf-token" value="{{ csrf_token }}" />
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <p>&copy; 2024 WakeAssist. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Scripts -->
     <script>
-        const video = document.getElementById('video');
-        const canvas = document.getElementById('canvas');
-        const startButton = document.getElementById('start');
-        const stopButton = document.getElementById('stop');
-        const statusText = document.getElementById('status');
-        const csrfToken = document.getElementById('csrf-token').value; // Get CSRF token value
+      const video = document.getElementById("video");
+      const canvas = document.getElementById("canvas");
+      const startButton = document.getElementById("start");
+      const stopButton = document.getElementById("stop");
+      const statusText = document.getElementById("status");
+      const csrfToken = document.getElementById("csrf-token").value; // Get CSRF token value
 
-        let stream;
-        let interval;
+      let stream;
+      let interval;
+      let animationFrameId;
 
-        async function startCamera() {
-            try {
-                stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                video.srcObject = stream;
-            } catch (err) {
-                console.error('Error accessing the camera: ', err);
+      // Variables to store the latest eye data
+      let latestLeftEye = null;
+      let latestRightEye = null;
+
+      async function startCamera() {
+        try {
+          stream = await navigator.mediaDevices.getUserMedia({ video: true });
+          video.srcObject = stream;
+          video.style.display = "none"; // Ensure video remains hidden
+          canvas.style.display = "block"; // Show the canvas when starting detection
+          drawFrame(); // Start the drawing loop
+        } catch (err) {
+          console.error("Error accessing the camera: ", err);
+          alert(
+            "Unable to access the camera. Please check your permissions and try again."
+          );
+        }
+      }
+
+      function stopCamera() {
+        if (stream) {
+          const tracks = stream.getTracks();
+          tracks.forEach((track) => track.stop());
+          stream = null; // Reset the stream variable
+        }
+        cancelAnimationFrame(animationFrameId);
+        clearInterval(interval);
+
+        // Hide the canvas when stopping detection
+        canvas.style.display = "none";
+        statusText.textContent = "Status: Detection Stopped";
+      }
+
+      function sendFrameToServer() {
+        console.log("Attempting to send frame to server...");
+        const dataUrl = canvas.toDataURL("image/jpeg");
+
+        fetch("/detection/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrfToken, // Use the CSRF token from the hidden input
+          },
+          body: JSON.stringify({ image: dataUrl }),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(
+                "Network response was not ok " + response.statusText
+              );
             }
+            return response.json();
+          })
+          .then((data) => {
+            // Update the status text with drowsiness alert and eye aspect ratio
+            statusText.textContent = `Status: ${
+              data.status
+            }, EAR: ${data.ear.toFixed(2)}`;
+
+            // Update the latest eye data
+            latestLeftEye = data.left_eye;
+            latestRightEye = data.right_eye;
+          })
+          .catch((err) => console.error("Error: ", err));
+      }
+
+      function drawFrame() {
+        const context = canvas.getContext("2d");
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        // After drawing the frame, draw the eye boxes if we have the data
+        if (latestLeftEye && latestLeftEye.length > 0) {
+          drawEyeBox(context, latestLeftEye);
+        }
+        if (latestRightEye && latestRightEye.length > 0) {
+          drawEyeBox(context, latestRightEye);
         }
 
-        function stopCamera() {
-            if (stream) {
-                const tracks = stream.getTracks();
-                tracks.forEach(track => track.stop());
-            }
+        animationFrameId = requestAnimationFrame(drawFrame);
+      }
+
+      // Function to draw a rectangle around an eye
+      function drawEyeBox(context, eye) {
+        const xCoordinates = eye.map((point) => point[0]);
+        const yCoordinates = eye.map((point) => point[1]);
+        const minX = Math.min(...xCoordinates);
+        const minY = Math.min(...yCoordinates);
+        const maxX = Math.max(...xCoordinates);
+        const maxY = Math.max(...yCoordinates);
+        const width = maxX - minX;
+        const height = maxY - minY;
+
+        context.strokeStyle = "#4c4ef9"; // Blue color matching the theme
+        context.lineWidth = 2;
+        context.strokeRect(minX, minY, width, height);
+      }
+
+      startButton.addEventListener("click", () => {
+        // Prevent multiple streams from being initiated
+        if (stream) {
+          console.warn("Detection is already running.");
+          return;
         }
+        startCamera();
+        interval = setInterval(sendFrameToServer, 500); // Send frame every 500ms for smoother tracking
+        statusText.textContent = "Status: Detecting...";
+      });
 
-        function sendFrameToServer() {
-            console.log("Attempting to send frame to server...");
-            const context = canvas.getContext('2d');
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
-            const dataUrl = canvas.toDataURL('image/jpeg');
-
-            fetch('/detection/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken // Use the CSRF token from the hidden input
-                },
-                body: JSON.stringify({ image: dataUrl })
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok ' + response.statusText);
-                }
-                return response.json();
-            })
-            .then(data => {
-                // Update the status text with drowsiness alert and eye aspect ratio
-                statusText.textContent = `Status: ${data.status}, EAR: ${data.ear.toFixed(2)}`;
-
-                // Draw eyes on the canvas if data is available
-                drawEyesOnCanvas(data.left_eye, data.right_eye);
-            })
-            .catch(err => console.error('Error: ', err));
-        }
-
-    function drawEyesOnCanvas(leftEye, rightEye) {
-        const context = canvas.getContext('2d');
-        context.clearRect(0, 0, canvas.width, canvas.height); // Clear previous drawings
-
-        if (leftEye && leftEye.length > 0) {
-            context.beginPath();
-            context.moveTo(leftEye[0][0], leftEye[0][1]);
-            leftEye.forEach(point => context.lineTo(point[0], point[1]));
-            context.closePath();
-            context.strokeStyle = 'green'; // Color for left eye
-            context.stroke();
-        }
-
-        if (rightEye && rightEye.length > 0) {
-            context.beginPath();
-            context.moveTo(rightEye[0][0], rightEye[0][1]);
-            rightEye.forEach(point => context.lineTo(point[0], point[1]));
-            context.closePath();
-            context.strokeStyle = 'red'; // Color for right eye
-            context.stroke();
-        }
-    }
-
-        startButton.addEventListener('click', () => {
-            startCamera();
-            interval = setInterval(sendFrameToServer, 1000);  // Send frame every second
-        });
-
-        stopButton.addEventListener('click', () => {
-            clearInterval(interval);
-            stopCamera();
-        });
+      stopButton.addEventListener("click", () => {
+        stopCamera();
+      });
     </script>
-</body>
+  </body>
 </html>
