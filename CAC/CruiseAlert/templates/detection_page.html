@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+{% load static %}
   <head>
     <meta charset="UTF-8" />
     <title>WakeAssist - Sleep Detection</title>
@@ -223,6 +224,8 @@
       </div>
     </footer>
 
+    <audio id="alertSound" src="{% static 'Sounds/mixkit-classic-short-alarm-993.wav' %}" preload="auto"> loop</audio>
+
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Scripts -->
@@ -233,6 +236,7 @@
       const stopButton = document.getElementById("stop");
       const statusText = document.getElementById("status");
       const csrfToken = document.getElementById("csrf-token").value; // Get CSRF token value
+      const alertSound = document.getElementById("alertSound"); // Reference to the audio element
 
       let stream;
       let interval;
@@ -300,6 +304,10 @@
             // Update the latest eye data
             latestLeftEye = data.left_eye;
             latestRightEye = data.right_eye;
+
+            if (data.status === "Sleeping") {
+              alertSound.play(); // Play the alert sound
+             }
           })
           .catch((err) => console.error("Error: ", err));
       }
@@ -342,7 +350,7 @@
           return;
         }
         startCamera();
-        interval = setInterval(sendFrameToServer, 500); // Send frame every 500ms for smoother tracking
+        interval = setInterval(sendFrameToServer, 100); // Send frame every 500ms for smoother tracking
         statusText.textContent = "Status: Detecting...";
       });
 

@@ -18,9 +18,11 @@ predictor = dlib.shape_predictor(model_path)
 
 LEFT_EYE = list(range(36, 42))
 RIGHT_EYE = list(range(42, 48))
-EYE_AR_THRESH = 0.25
-EYE_AR_CONSEC_FRAMES = 48
+EYE_AR_THRESH = 0.30
+EYE_AR_CONSEC_FRAMES = 5
 counter = 0
+frames_to_ignore = 3
+
 
 def calculate_eye_aspect_ratio(eye):
     A = distance.euclidean(eye[1], eye[5])
@@ -35,13 +37,14 @@ ear = 0
 
 def detect_sleep_from_frame(image_data):
     global counter
+    global frames_to_ignore
     image_bytes = base64.b64decode(image_data)
     image = Image.open(io.BytesIO(image_bytes))
     image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
     faces = detector(gray)
-    status = "Awake"
+    status = "Face not detected"
     left_eye_coords = []
     right_eye_coords = []
     ear = 0
@@ -70,8 +73,15 @@ def detect_sleep_from_frame(image_data):
             counter += 1
             if counter >= EYE_AR_CONSEC_FRAMES:
                 status = "Sleeping"
+
+        elif frames_to_ignore > 0:
+            frames_to_ignore -= 1
+            status = "Sleeping"
+
         else:
             counter = 0
+            status = "Awake"
+
 
         # Store eye coordinates for the response
         left_eye_coords = left_eye
